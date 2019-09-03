@@ -1,0 +1,6 @@
+endpoint: https://rbs-a7af25ba21.herokuapp.com/rbs-backend/dev
+datamodel: datamodel.prisma
+
+generate:
+  - generator: javascript-client
+    output: ./generated/prisma-client/
