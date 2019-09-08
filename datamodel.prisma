@@ -1,3 +1,14 @@
-type User { 
+type User {
+  id: ID! @id
+  email: String! @unique
   name: String!
+  password: String!
 }
+
+type Session {
+  id: ID! @id
+  token: String!
+  auth_time: String!
+  exp: String!
+}
+
