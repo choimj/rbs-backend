@@ -13,5 +13,5 @@ export default new JwtStrategy.Strategy(opts, (jwt_payload, done) => {
   // if (jwt_payload.email  = = = "1jin94@naver.com") {
   //     return done(null, true)
   // }
-  return done(null, false);
+  return done(null, true);
 });

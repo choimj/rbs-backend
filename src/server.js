@@ -2,10 +2,9 @@ import { GraphQLServer } from "graphql-yoga";
 import schema from "./schema";
 import GoogleStrategy from "./auth/googleOauth";
 import JwtStrategy from "./auth/jwt";
+import jwt from "jsonwebtoken";
 import passport from "passport";
 import bodyParser from "body-parser";
-// import http from "http";
-// import cors from "cors";
 
 import dotenv from "dotenv";
 dotenv.config(); //.env 파일 로드
@@ -14,22 +13,23 @@ const logger = require("morgan");
 
 const PORT = process.env.PORT || 4000;
 const server = new GraphQLServer({ schema });
+const jwtSecret = process.env.JWT_SECRET;
 
 // server.express.use(cors());
 server.express.use(bodyParser.urlencoded({ extended: false }));
 server.express.use(bodyParser.json());
 
-server.express.set("JWT_SECRET", process.env.JWT_SECRET);
+// server.express.set("JWT_SECRET", process.env.JWT_SECRET);
 
 server.express.use(passport.initialize()); // passport 구동
 server.express.use(passport.session()); // 세션 연결
 
-// let allowCrossDomain = function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "*");
-//   next();
-// };
-// server.express.use(allowCrossDomain);
+let allowCrossDomain = (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
+};
+server.express.use(allowCrossDomain);
 
 // server.express.get("/", (req, res) => {
 //   res.send(
@@ -66,35 +66,41 @@ server.express.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
   function(req, res) {
-    // console.log("res", res.user);
-    // console.log("authenticate");
     /**
-     * google API로 인증받은 token > DB에 넣기
+     * google API로 인증받은 후 front-end 로 controll 넘겨서 처리
      */
-    // console.log("req.query", req.user);
     const { flag, data } = req.user;
-    // console.log(flag, data);
     if (flag) {
-      res.redirect("/");
+      res.redirect("http://localhost:3000");
     } else {
       res.redirect("http://localhost:3000/join/callback?email=" + data.email);
     }
-    // res.redirect("http://localhost:3000/login");
   }
 );
 
-// server.express.post("/auth/jwt", function(req, res) {
-//   console.log("req body", req.body);
-// });
+server.express.post("/auth/jwt", (req, res) => {
+  console.log("req body", req.body);
+  const { email } = req.body;
+  const opts = {
+    expiresIn: "1m"
+  };
+  const token = jwt.sign({ email }, jwtSecret, opts);
+  // passport.authenticate("jwt", { session: false });
 
-// server.express.get("/all/users", async (req, res) => {
-//   const allUsers = await prisma.users();
-//   console.log(allUsers);
-//   res.json({
-//     success: true,
-//     data: allUsers
-//   });
-// });
+  return res.status(200).json({
+    message: "success",
+    jwtToken: token
+  });
+});
+
+server.express.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  (req, res) => {
+    console.log(req.body);
+  }
+);
+
 server.express.use(logger("dev"));
 server.start({ port: PORT }, () => {
   console.log(`Server running on http://localhost:${PORT}`);

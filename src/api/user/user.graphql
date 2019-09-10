@@ -5,6 +5,14 @@ type User {
   password: String!
 }
 
+type UserTest {
+  id: ID!
+  email: String!
+  name: String!
+  password: String!
+  message: String
+}
+
 type Query {
   users: [User]!
   user(email: String!): User
@@ -12,5 +20,6 @@ type Query {
 
 type Mutation {
   createUser(email: String!, name: String!, password: String!): String
+  comparePassword(email: String!, password: String!): UserTest
   # updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
 }

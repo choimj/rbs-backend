@@ -7,13 +7,32 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (_, args) => {
+      const { email, name, password } = args;
       await prisma.createUser({
-        email: args.email,
-        name: args.name,
-        password: args.password
+        email: email,
+        name: name,
+        password: password
       });
       // console.log(args);
       return "success";
+    },
+    comparePassword: async (_, args) => {
+      // console.log(args);
+      const { email, password } = args;
+      const user = await prisma.user({
+        email: email
+      });
+      // console.log(user);
+      const compPassword = user.password;
+      if (password === compPassword) {
+        // console.log("aaaa");
+        user.message = "aaa";
+        console.log(user);
+
+        return user;
+      } else {
+        return user;
+      }
     }
   }
 };

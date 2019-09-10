@@ -9,7 +9,7 @@ export default new GoogleStrategy.OAuth2Strategy(
     clientSecret: process.env.PASSPORT_GOOGLE_OAUTH_CLIENT_SECRET,
     callbackURL: process.env.PASSPORT_GOOGLE_OAUTH_CALLBACK_URL
   },
-  async function(accessToken, refreshToken, profile, done) {
+  async (accessToken, refreshToken, profile, done) => {
     // console.log("accessToken", accessToken);
     // console.log("profile", profile);
     const email = profile.emails[0].value;
