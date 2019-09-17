@@ -1,14 +1,27 @@
 type User {
-  id: ID! @id
+  id: ID! @id 
   email: String! @unique
   name: String!
   password: String!
+  groups: [GroupParticipant] @relation(onDelete: CASCADE)
 }
 
 type Session {
   id: ID! @id
-  token: String!
-  auth_time: String!
-  exp: String!
+  email: String! @unique  
+  token: String! @unique  
+}
+
+type Group {
+  id: ID! @id
+  name: String!
+  groupParticipants: [GroupParticipant] @relation(onDelete: CASCADE)
+}
+
+type GroupParticipant {
+  id: ID! @id
+  groupId: Group 
+  userId: User 
+  name: String!
 }
 

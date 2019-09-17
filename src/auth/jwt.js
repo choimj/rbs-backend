@@ -1,17 +1,23 @@
 import JwtStrategy from "passport-jwt";
 import ExtractJwt from "passport-jwt";
+import { prisma } from "../../generated/prisma-client";
 import dotenv from "dotenv";
 dotenv.config(); //.env 파일 로드
 
 const opts = {
   jwtFromRequest: ExtractJwt.ExtractJwt.fromAuthHeaderAsBearerToken(), //BearerToken 방식으로
-  secretOrKey: process.env.JWT_SECRET //보통은 process.env에 저장해서 key가 노출되지 않도록 한다.
+  secretOrKey: process.env.JWT_SECRET
 };
 
-export default new JwtStrategy.Strategy(opts, (jwt_payload, done) => {
-  //원래는 자신의 데이터 베이스 값과 비교해야하지만 예제 편의상 리터럴로 바로사용
-  // if (jwt_payload.email  = = = "1jin94@naver.com") {
-  //     return done(null, true)
-  // }
-  return done(null, true);
+export default new JwtStrategy.Strategy(opts, async (jwt_payload, done) => {
+  const { email } = jwt_payload;
+  const session = await prisma.session({ email: email });
+  // const session = await prisma.session({ email: "aaa@test.com" });
+  // console.log("============JwtStrategy", session);
+  // console.log("jwt_payload", jwt_payload);
+  if (session) {
+    return done(null, { flag: true, token: session.token });
+  } else {
+    return done(null, false);
+  }
 });

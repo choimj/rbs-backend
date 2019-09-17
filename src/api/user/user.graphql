@@ -3,23 +3,30 @@ type User {
   email: String!
   name: String!
   password: String!
+  groupParticipants: [GroupParticipant!]
 }
 
-type UserTest {
+type Session {
   id: ID!
   email: String!
-  name: String!
-  password: String!
+  token: String!
+}
+
+type ReturnUserObj {
+  id: ID
+  email: String
+  name: String
   message: String
+  flag: Boolean
 }
 
 type Query {
   users: [User]!
-  user(email: String!): User
+  user(id: ID, email: String!): User
 }
 
 type Mutation {
   createUser(email: String!, name: String!, password: String!): String
-  comparePassword(email: String!, password: String!): UserTest
-  # updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  comparePassword(email: String!, password: String!): ReturnUserObj
+  deleteSession(email: String!, token: String!): Session
 }
