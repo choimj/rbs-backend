@@ -4,10 +4,23 @@ type Group {
   groupParticipants: [GroupParticipant!]
 }
 
+input GroupCreateInput {
+  id: ID
+  name: String!
+  # groupParticipants: GroupParticipantCreateManyWithoutGroupIdInput
+}
+
 type GroupParticipant {
   id: ID!
   groupId: Group
   userId: User
+  name: String!
+}
+
+input GroupParticipantCreateInput {
+  id: ID
+  groupId: String!
+  userId: String!
   name: String!
 }
 
@@ -17,4 +30,13 @@ type Query {
   # group(id: String): Group
   # groupParticipant(id: ID!): GroupParticipant
   # groupParticipants(id: ID!): [GroupParticipant]
+}
+
+type Mutation {
+  createGroup(data: GroupCreateInput!): Group!
+  createGroupParticipant(
+    groupId: String!
+    userId: String!
+    name: String!
+  ): GroupParticipant!
 }

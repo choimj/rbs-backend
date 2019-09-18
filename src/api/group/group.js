@@ -6,9 +6,17 @@ const resolvers = {
   Query: {
     groups: async () => await prisma.groups(),
     group: async (_, args) => {
-      let groups = await prisma.group({ id: args.id });
+      const { id } = args;
+      let groups = await prisma.group({ id: id });
 
       return groups;
+    }
+  },
+  Mutation: {
+    createGroup: async (_, args) => {
+      const { name } = args.data;
+      console.log("ccreateGroup", name);
+      return await prisma.createGroup({ name: name });
     }
   },
   User: {
