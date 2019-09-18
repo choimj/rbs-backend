@@ -19,24 +19,17 @@ type GroupParticipant {
 
 input GroupParticipantCreateInput {
   id: ID
-  groupId: String!
-  userId: String!
+  groupId: String
+  userId: String
   name: String!
 }
 
 type Query {
   groups: [Group]!
   group(id: ID): Group
-  # group(id: String): Group
-  # groupParticipant(id: ID!): GroupParticipant
-  # groupParticipants(id: ID!): [GroupParticipant]
 }
 
 type Mutation {
   createGroup(data: GroupCreateInput!): Group!
-  createGroupParticipant(
-    groupId: String!
-    userId: String!
-    name: String!
-  ): GroupParticipant!
+  createGroupParticipant(data: GroupParticipantCreateInput!): GroupParticipant!
 }

@@ -15,8 +15,24 @@ const resolvers = {
   Mutation: {
     createGroup: async (_, args) => {
       const { name } = args.data;
-      console.log("ccreateGroup", name);
       return await prisma.createGroup({ name: name });
+    },
+    createGroupParticipant: async (_, args) => {
+      const { groupId, userId, name } = args.data;
+      console.log("createGroupParticipant>>", name, groupId, userId);
+      return await prisma.createGroupParticipant({
+        groupId: {
+          connect: {
+            id: groupId
+          }
+        },
+        userId: {
+          connect: {
+            id: userId
+          }
+        },
+        name: name
+      });
     }
   },
   User: {
