@@ -67,9 +67,15 @@ server.express.get(
     const { flag, data } = req.user;
     // console.log(req.user);
     if (flag) {
-      res.redirect("http://localhost:3000/callback/login?email=" + data.email);
+      // res.redirect("http://localhost:3000/callback/login?email=" + data.email);
+      res.redirect(
+        "https://rbsdemo.netlify.com/callback/login?email=" + data.email
+      );
     } else {
-      res.redirect("http://localhost:3000/callback/join?email=" + data.email);
+      // res.redirect("http://localhost:3000/callback/join?email=" + data.email);
+      res.redirect(
+        "https://rbsdemo.netlify.com/callback/login?email=" + data.email
+      );
     }
   }
 );

@@ -4,12 +4,6 @@ type Group {
   groupParticipants: [GroupParticipant!]
 }
 
-input GroupCreateInput {
-  id: ID
-  name: String!
-  # groupParticipants: GroupParticipantCreateManyWithoutGroupIdInput
-}
-
 type GroupParticipant {
   id: ID!
   groupId: Group
@@ -17,6 +11,20 @@ type GroupParticipant {
   name: String!
 }
 
+input GroupCreateInput {
+  id: ID
+  name: String!
+  # groupParticipants: [GroupParticipantCreateInput!]
+}
+
+input GroupUpdateInput {
+  id: ID!
+  name: String!
+  groupParticipants: [GroupParticipantCreateInput!]
+}
+input GroupWhereUniqueInput {
+  id: ID
+}
 input GroupParticipantCreateInput {
   id: ID
   groupId: String
@@ -32,4 +40,6 @@ type Query {
 type Mutation {
   createGroup(data: GroupCreateInput!): Group!
   createGroupParticipant(data: GroupParticipantCreateInput!): GroupParticipant!
+  updateGroup(data: GroupUpdateInput!): Group
+  deleteGroup(data: GroupWhereUniqueInput!): Group
 }

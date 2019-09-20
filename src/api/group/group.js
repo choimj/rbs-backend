@@ -19,7 +19,7 @@ const resolvers = {
     },
     createGroupParticipant: async (_, args) => {
       const { groupId, userId, name } = args.data;
-      console.log("createGroupParticipant>>", name, groupId, userId);
+      // console.log("createGroupParticipant>>", name, groupId, userId);
       return await prisma.createGroupParticipant({
         groupId: {
           connect: {
@@ -33,7 +33,37 @@ const resolvers = {
         },
         name: name
       });
-    }
+    },
+    updateGroup: async (_, args) => {
+      const { id, name, groupParticipants } = args.data;
+      await prisma.deleteManyGroupParticipants({
+        AND: [{ groupId: { id: id } }]
+      });
+      groupParticipants.forEach(async element => {
+        await prisma.createGroupParticipant({
+          groupId: {
+            connect: {
+              id: element.groupId
+            }
+          },
+          userId: {
+            connect: {
+              id: element.userId
+            }
+          },
+          name: element.name
+        });
+      });
+
+      return await prisma.updateGroup({
+        where: { id: id },
+        data: {
+          name: name
+        }
+      });
+    },
+    deleteGroup: async (_, args) =>
+      await prisma.deleteGroup({ id: args.data.id })
   },
   User: {
     async groupParticipants(parent) {
