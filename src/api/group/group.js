@@ -11,7 +11,7 @@ const resolvers = {
 
       return groups;
     }
-  },
+  }, 
   Mutation: {
     createGroup: async (_, args) => {
       const { name } = args.data;
