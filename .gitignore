@@ -1,7 +1,5 @@
-node_modules
+# node_modules
 
-/build
-/generated
-.env
-server copy.js
-yarn.lock
+# /build
+# /generated
+# .env

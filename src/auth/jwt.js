@@ -12,9 +12,7 @@ const opts = {
 export default new JwtStrategy.Strategy(opts, async (jwt_payload, done) => {
   const { email } = jwt_payload;
   const session = await prisma.session({ email: email });
-  // const session = await prisma.session({ email: "aaa@test.com" });
-  // console.log("============JwtStrategy", session);
-  // console.log("jwt_payload", jwt_payload);
+
   if (session) {
     return done(null, { flag: true, token: session.token });
   } else {
